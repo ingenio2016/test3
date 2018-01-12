@@ -20,7 +20,7 @@ export class ChartService {
   constructor(private db: AngularFirestore) {
     // initialize chart coleections
     this.chartCollection = this.db
-      .collection<any>('charts');
+      .collection<any>('chart');
     this.chartObs = this.chartCollection.valueChanges();
 
     // initialize chart category coleections
@@ -29,7 +29,51 @@ export class ChartService {
     this.chatCategoryObs = this.chartCategoryCollection.valueChanges();
   }
 
-  changeSearchState() {
-    this.isSearch = false;
+  loadCharts() {
+    return this.chartObs
+      .map((charts: any[]) => {
+        this.charts = [];
+        for (const chart of charts){
+          this.charts.unshift(chart);
+        }
+        return this.charts;
+      });
+  }
+
+  saveChart( forma: any ): Promise<any> {
+    const promise = new Promise( (resolve, reject) => {
+      this.chartId = '';
+      this.chartCollection.add( forma )
+        .then((chart) => {
+          this.chartCollection.doc(chart.id).update({
+            id: chart.id
+          }).then((data) => {
+            resolve(chart.id);
+          });
+        }).catch((err) => {
+        reject(err);
+      });
+    });
+    return promise;
+  }
+
+  updateChart( forma: any ): Promise<any> {
+    const promise = new Promise( (resolve, reject) => {
+      this.chartCollection.doc(forma.id).update({
+        name: forma.name,
+        categories: forma.categories
+      }).then((data) => {
+        resolve({data: data});
+      });
+    });
+    return promise;
+  }
+
+  getChart(id: string) {
+    for (const chart of this.charts) {
+      if ( chart.id === id ) {
+        return chart;
+      }
+    }
   }
 }

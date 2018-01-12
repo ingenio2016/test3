@@ -17,7 +17,10 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
 
 // Chart Provider
-import { ChartService } from './providers/chart.service'
+import { ChartService } from './providers/chart.service';
+
+// Form Module
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -32,7 +35,9 @@ import { ChartService } from './providers/chart.service'
     BrowserModule,
     APP_ROUTING,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence()
+    AngularFirestoreModule.enablePersistence(),
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     ChartService

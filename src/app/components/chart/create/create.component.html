@@ -1,3 +1,47 @@
-<p>
-  create works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+    <div class="input-group">
+      <select class="custom-select" (change)="getChart($event.target.value)">
+        <option *ngFor="let chart of _chartService.charts" [value]="chart.id">{{ chart.name }}</option>
+      </select>
+      <div class="input-group-append">
+        <button type="button" (click)="newGroup()" class="btn btn-outline-primary" *ngIf="!forma.dirty">Create Group</button>
+        <button class="btn btn-outline-primary" [ngClass]="{'disabled':!forma.valid}" *ngIf="forma.dirty" (click)="save()">Save</button>
+      </div>
+    </div>
+    <br>
+
+    <hr>
+    <h3>Chart Group Management</h3>
+    <form [formGroup]="forma" novalidate="novalidate">
+      <div class="form-group">
+        <input class="form-control"
+               type="hidden"
+               name="id"
+               formControlName="id">
+      </div>
+      <div class="form-group">
+        <input class="form-control"
+               name="name"
+               formControlName="name"
+               placeholder="Chart Group Name">
+      </div>
+      <div class="form-group row">
+        <label class="col-2 col-form-label">Categories <a class="cursor" (click)="addCategory()"><i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i></a></label>
+        <div formArrayName="categories" class="col-lg-8"
+             *ngFor="let category of forma.controls['categories'].controls; let i = index;">
+          <div [formGroupName]="i">
+            <div class="row">
+              <div class="col-md-6">
+                <input class="form-control" formControlName="name" placeholder="Nombre">
+              </div>
+              <div class="col-md-6">
+                <input class="form-control" formControlName="value" placeholder="Valor">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
