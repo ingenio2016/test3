@@ -12,8 +12,8 @@
       <div class="table-responsive text-center">
         <table class="columns">
           <tr>
-            <td><div id="chart_pie" style="border: 1px solid #ccc"></div></td>
-            <td><div id="chart_bar" style="border: 1px solid #ccc"></div></td>
+            <td><google-chart #cchart [data]="columnChartData"></google-chart></td>
+            <td><google-chart [data]="pieChartData"></google-chart></td>
           </tr>
         </table>
       </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartService } from '../../../providers/chart.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { Chart, Categories } from '../../../interfaces/chart.interface';
+import { Chart } from '../../../interfaces/chart.interface';
 
 @Component({
   selector: 'app-create',
@@ -11,7 +11,7 @@ import { Chart, Categories } from '../../../interfaces/chart.interface';
 export class CreateComponent implements OnInit {
 
   // chart Object to FormControls
-  chart: any = {
+  chart: Chart = {
     id: '',
     name: '',
     categories: [
@@ -46,11 +46,11 @@ export class CreateComponent implements OnInit {
   }
 
   init_categories(categories: any) {
-    let arrayForm = new FormArray([]);
+    const arrayForm = new FormArray([]);
 
-    for( let category of categories ){
+    for ( const category of categories ){
 
-      let catGroup = new FormGroup({
+      const catGroup = new FormGroup({
         'name': new FormControl( category.name, Validators.required ),
         'value': new FormControl( category.value, Validators.required )
       });
@@ -72,14 +72,12 @@ export class CreateComponent implements OnInit {
   save() {
     console.log(this.forma);
     if (this.forma.controls['id'].value === '' || this.forma.controls['id'].value === null) {
-      console.log('Create');
       this._chartService.saveChart(this.forma.value).then( (group) => {
         console.log('Se Creó el Grupo', group);
         this.resetForm();
         this.forma.reset(this.chart);
       });
     }else {
-      console.log('Update');
       this._chartService.updateChart(this.forma.value).then( (group) => {
         console.log('Se Modificó el Grupo', group);
         this.resetForm();
@@ -105,7 +103,7 @@ export class CreateComponent implements OnInit {
     this.setDataForm( this._chartService.getChart(id) );
   }
 
-  setDataForm(data: any) {
+  setDataForm(data: Chart) {
     this.forma = new FormGroup({
       'id': new FormControl(data.id),
       'name': new FormControl(data.name),

@@ -23,7 +23,7 @@ import { ChartService } from './providers/chart.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Google Charts Module
-
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 
 @NgModule({
@@ -40,7 +40,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Ng2GoogleChartsModule
   ],
   providers: [
     ChartService
