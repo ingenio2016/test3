@@ -6,7 +6,7 @@
       </select>
       <div class="input-group-append">
         <button type="button" (click)="newGroup()" class="btn btn-outline-primary" *ngIf="!forma.dirty">Create Group</button>
-        <button class="btn btn-outline-primary" [ngClass]="{'disabled':!forma.valid}" *ngIf="forma.dirty" (click)="save()">Save</button>
+        <button class="btn btn-outline-primary" [disabled]="!forma.valid" *ngIf="forma.dirty" (click)="save()">Save</button>
       </div>
     </div>
     <br>
@@ -21,22 +21,38 @@
                formControlName="id">
       </div>
       <div class="form-group">
-        <input class="form-control"
+        <input class="form-control" [ngClass]="{'is-invalid':forma.get('name').touched && !forma.get('name').valid}"
                name="name"
                formControlName="name"
                placeholder="Chart Group Name">
+        <div *ngIf="forma.get('name').errors?.required && forma.get('name').touched" [ngClass]="{'form-control-feedback':forma.get('name').errors?.required}">
+          Name field is required
+        </div>
       </div>
       <div class="form-group row">
-        <label class="col-2 col-form-label">Categories <a class="cursor" (click)="addCategory()"><i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i></a></label>
-        <div formArrayName="categories" class="col-lg-8"
+          <label class="col-12 col-form-label">Categories <a class="cursor" (click)="addCategory()"><i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i></a></label>
+        <div formArrayName="categories" class="col-lg-12"
              *ngFor="let category of forma.controls['categories'].controls; let i = index;">
           <div [formGroupName]="i">
             <div class="row">
               <div class="col-md-6">
-                <input class="form-control" formControlName="name" placeholder="Nombre">
+                <input class="form-control"
+                       formControlName="name"
+                       placeholder="Name"
+                       [ngClass]="{'is-invalid':forma.controls['categories'].controls[i].controls['name'].touched && !forma.controls['categories'].controls[i].controls['name'].valid}">
+                <div *ngIf="forma.controls['categories'].controls[i].controls['name'].errors?.required && forma.controls['categories'].controls[i].controls['name'].touched" [ngClass]="{'form-control-feedback':forma.controls['categories'].controls[i].controls['name'].errors?.required}">
+                  Name field is required
+                </div>
               </div>
               <div class="col-md-6">
-                <input class="form-control" formControlName="value" placeholder="Valor">
+                <input class="form-control"
+                       type="number"
+                       formControlName="value"
+                       placeholder="Value"
+                       [ngClass]="{'is-invalid':forma.controls['categories'].controls[i].controls['value'].touched && !forma.controls['categories'].controls[i].controls['value'].valid}">
+                <div *ngIf="forma.controls['categories'].controls[i].controls['value'].errors?.required && forma.controls['categories'].controls[i].controls['value'].touched" [ngClass]="{'form-control-feedback':forma.controls['categories'].controls[i].controls['value'].errors?.required}">
+                  Value field is required
+                </div>
               </div>
             </div>
           </div>

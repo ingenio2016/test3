@@ -22,6 +22,9 @@ import { ChartService } from './providers/chart.service';
 // Form Module
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+// Google Charts Module
+
+
 
 @NgModule({
   declarations: [

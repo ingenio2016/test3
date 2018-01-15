@@ -1,3 +1,22 @@
-<p>
-  list works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+    <div class="input-group">
+      <select class="custom-select" (change)="getChart($event.target.value)">
+        <option *ngFor="let chart of _chartService.charts" [value]="chart.id">{{ chart.name }}</option>
+      </select>
+    </div>
+    <hr>
+    <div *ngIf="chart">
+      <h4>{{ chart.name }}</h4>
+      <br>
+      <div class="table-responsive text-center">
+        <table class="columns">
+          <tr>
+            <td><div id="chart_pie" style="border: 1px solid #ccc"></div></td>
+            <td><div id="chart_bar" style="border: 1px solid #ccc"></div></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartService } from '../../../providers/chart.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import {forEach} from '@angular/router/src/utils/collection';
+import { Chart, Categories } from '../../../interfaces/chart.interface';
 
 @Component({
   selector: 'app-create',
@@ -14,35 +14,57 @@ export class CreateComponent implements OnInit {
   chart: any = {
     id: '',
     name: '',
-    categories: [{
-      name: '',
-      value: '',
-    }]
+    categories: [
+      {
+        name: '',
+        value: 0,
+      }
+    ]
   };
   forma: FormGroup;
-  private chartGroup: any = [];
   constructor( private _chartService: ChartService, private formBuilder: FormBuilder ) {
-    this.forma = this.formBuilder.group({
-      id: '',
-      name: '',
-      categories: this.formBuilder.array([ this.createItem() ])
+    this.forma = new FormGroup({
+      'id': new FormControl(''),
+      'name': new FormControl('', Validators.required),
+      'categories': this.init_categories( this.chart.categories )
     });
-  }
-
-  createItem(): FormGroup {
-    return this.formBuilder.group({
-      name: '',
-      value: ''
-    });
-  }
-
-  ngOnInit() {
     this._chartService.loadCharts().subscribe( () => {
     });
+
     this.forma.setValue(this.chart);
   }
 
+  ngOnInit() {
+  }
+
+  resetForm() {
+    this.forma = new FormGroup({
+      'id': new FormControl(''),
+      'name': new FormControl(''),
+      'categories': this.init_categories( this.chart.categories )
+    });
+  }
+
+  init_categories(categories: any) {
+    let arrayForm = new FormArray([]);
+
+    for( let category of categories ){
+
+      let catGroup = new FormGroup({
+        'name': new FormControl( category.name, Validators.required ),
+        'value': new FormControl( category.value, Validators.required )
+      });
+
+      arrayForm.push( catGroup );
+
+    }
+
+    return arrayForm;
+  }
+
+
   newGroup() {
+    this.resetForm();
     this.forma.reset(this.chart);
     console.log(this.forma);
   }
@@ -53,24 +75,41 @@ export class CreateComponent implements OnInit {
       console.log('Create');
       this._chartService.saveChart(this.forma.value).then( (group) => {
         console.log('Se Creó el Grupo', group);
+        this.resetForm();
         this.forma.reset(this.chart);
       });
     }else {
       console.log('Update');
       this._chartService.updateChart(this.forma.value).then( (group) => {
         console.log('Se Modificó el Grupo', group);
+        this.resetForm();
         this.forma.reset(this.chart);
       });
     }
   }
 
+  createItem(): FormGroup {
+    return this.formBuilder.group({
+      'name': new FormControl( '', Validators.required ),
+      'value': new FormControl( '', Validators.required )
+    });
+  }
+
   addCategory () {
-    (<FormArray>this.forma.controls['categories']).push(
-      this.createItem()
-    );
+    const control = <FormArray>this.forma.controls['categories'];
+    control.push(this.createItem());
   }
 
   getChart(id: string) {
-    this.forma.reset(this._chartService.getChart(id));
+    this.resetForm()
+    this.setDataForm( this._chartService.getChart(id) );
+  }
+
+  setDataForm(data: any) {
+    this.forma = new FormGroup({
+      'id': new FormControl(data.id),
+      'name': new FormControl(data.name),
+      'categories': this.init_categories( data.categories )
+    });
   }
 }
